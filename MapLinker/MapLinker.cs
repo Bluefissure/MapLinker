@@ -5,6 +5,7 @@ using Dalamud;
 using Dalamud.Plugin;
 using Dalamud.Game.Command;
 using Dalamud.Game.ClientState.Actors.Types;
+using Dalamud.Game.Chat;
 using Dalamud.Game.Chat.SeStringHandling;
 using Dalamud.Game.Chat.SeStringHandling.Payloads;
 using Lumina;
@@ -31,6 +32,17 @@ namespace MapLinker
 
         public Lumina.Excel.ExcelSheet<Aetheryte> Aetherytes = null;
         public Lumina.Excel.ExcelSheet<MapMarker> AetherytesMap = null;
+
+        public List<XivChatType> HiddenChatType = new List<XivChatType> {
+            XivChatType.None,
+            XivChatType.CustomEmote,
+            XivChatType.StandardEmote,
+            XivChatType.SystemMessage,
+            XivChatType.SystemError,
+            XivChatType.GatheringSystemMessage,
+            XivChatType.ErrorMessage,
+            XivChatType.RetainerSale
+        };
 
         public void Dispose()
         {
@@ -128,7 +140,7 @@ namespace MapLinker
             return aetheryteName;
         }
 
-        private void Chat_OnChatMessage(Dalamud.Game.Chat.XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
+        private void Chat_OnChatMessage(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
         {
             if (!Config.Recording) return;
             bool hasMapLink = false;
@@ -150,20 +162,28 @@ namespace MapLinker
                     
                 }
             }
+            string messageText = message.TextValue;
             if (hasMapLink)
             {
-                Config.MapLinkMessageList.Add(new MapLinkMessage(
-                    (ushort)type,
-                    sender.TextValue,
-                    message.TextValue,
-                    coordX,
-                    coordY,
-                    scale,
-                    maplinkPayload.TerritoryType.RowId,
-                    maplinkPayload.PlaceName,
-                    DateTime.Now
-                ));
-                Config.Save();
+                bool filteredOut = false;
+                bool alreadyInList = Config.MapLinkMessageList.Any(w => { return w.Text == messageText; });
+                if (Config.FilterDuplicates && alreadyInList) filteredOut = true;
+                if (!filteredOut && Config.RecordingChannels.IndexOf((ushort)type) == -1) filteredOut = true;
+                if (!filteredOut)
+                {
+                    Config.MapLinkMessageList.Add(new MapLinkMessage(
+                        (ushort)type,
+                        sender.TextValue,
+                        messageText,
+                        coordX,
+                        coordY,
+                        scale,
+                        maplinkPayload.TerritoryType.RowId,
+                        maplinkPayload.PlaceName,
+                        DateTime.Now
+                    ));
+                    Config.Save();
+                }
             }
         }
 

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using Dalamud.Configuration;
 using Dalamud.Plugin;
+using Dalamud.Game.Chat;
 using MapLinker.Objects;
+using System.Linq;
 
 namespace MapLinker
 {
@@ -13,14 +15,17 @@ namespace MapLinker
 
         public MapLinkerLanguage MapLinkerLanguage = MapLinkerLanguage.Client;
         public bool ShowTooltips = true;
+        public bool FilterDuplicates = false;
         public bool UseFloatingWindow;
+        public string UILanguage = "en";
         public List<MapLinkMessage> MapLinkMessageList = new List<MapLinkMessage>();
 
         public bool Recording = true;
-        public bool Coord = true;
-        public bool Teleport = true;
+        public bool Coord = false;
+        public bool Teleport = false;
         public bool PrintMessage = false;
         public bool PrintError = true;
+        public List<ushort> RecordingChannels = Enum.GetValues(typeof(XivChatType)).Cast<ushort>().ToList();
 
         #region Init and Save
 

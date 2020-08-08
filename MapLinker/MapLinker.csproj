@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="Gui\ConfigurationWindow.cs" />
+    <Compile Include="Gui\Localizer.cs" />
     <Compile Include="Gui\Window.cs" />
     <Compile Include="Objects\MapLinkMessage.cs" />
     <Compile Include="Objects\MapLinkerLanguage.cs" />
@@ -84,7 +85,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetDir)\MapLinker.dll D:\Code\Git\Dalamud\Dalamud\bin\Debug\XIVLauncher\testPlugins\MapLinker\1.0.0.0\ /K /D /H /Y
-xcopy $(TargetDir)\MapLinker.pdb D:\Code\Git\Dalamud\Dalamud\bin\Debug\XIVLauncher\testPlugins\MapLinker\1.0.0.0\ /K /D /H /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy $(TargetDir)\MapLinker.dll D:\Code\Git\Dalamud\Dalamud\bin\Debug\XIVLauncher\testPlugins\MapLinker\1.0.1.0\ /K /D /H /Y
+xcopy $(TargetDir)\MapLinker.pdb D:\Code\Git\Dalamud\Dalamud\bin\Debug\XIVLauncher\testPlugins\MapLinker\1.0.1.0\ /K /D /H /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
