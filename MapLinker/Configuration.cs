@@ -25,7 +25,9 @@ namespace MapLinker
         public bool Teleport = false;
         public bool PrintMessage = false;
         public bool PrintError = true;
-        public List<ushort> RecordingChannels = Enum.GetValues(typeof(XivChatType)).Cast<ushort>().ToList();
+        public List<ushort> FilteredChannels = new List<ushort>();
+        // public List<ushort> RecordingChannels = new List<ushort> { };
+
 
         #region Init and Save
 

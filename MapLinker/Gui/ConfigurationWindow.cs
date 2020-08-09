@@ -16,6 +16,17 @@ namespace MapLinker.Gui
         private int _selectedLanguage;
         private Localizer _localizer;
 
+        public List<XivChatType> HiddenChatType = new List<XivChatType> {
+            XivChatType.None,
+            XivChatType.CustomEmote,
+            XivChatType.StandardEmote,
+            XivChatType.SystemMessage,
+            XivChatType.SystemError,
+            XivChatType.GatheringSystemMessage,
+            XivChatType.ErrorMessage,
+            XivChatType.RetainerSale
+        };
+
         public ConfigurationWindow(MapLinker plugin) : base(plugin)
         {
             _languageList = new string[] { "en", "zh" };
@@ -103,23 +114,23 @@ namespace MapLinker.Gui
             ImGui.Columns(4, "FiltersTable", true);
             foreach (ushort chatType in Enum.GetValues(typeof(XivChatType)))
             {
-                if (Plugin.HiddenChatType.IndexOf((XivChatType)chatType) != -1) continue;
+                if (HiddenChatType.IndexOf((XivChatType)chatType) != -1) continue;
                 string chatTypeName = Enum.GetName(typeof(XivChatType), chatType);
-                bool checkboxClicked = Config.RecordingChannels.IndexOf(chatType) != -1;
+                bool checkboxClicked = Config.FilteredChannels.IndexOf(chatType) == -1;
                 if (ImGui.Checkbox(_localizer.Localize(chatTypeName) + "##filter", ref checkboxClicked))
                 {
-                    Config.RecordingChannels = Config.RecordingChannels.Distinct().ToList();
+                    Config.FilteredChannels = Config.FilteredChannels.Distinct().ToList();
                     if (checkboxClicked)
                     {
-                        Config.RecordingChannels.Add(chatType);
+                        if (Config.FilteredChannels.IndexOf(chatType) != -1)
+                            Config.FilteredChannels.Remove(chatType);
                     }
-                    else if (Config.RecordingChannels.IndexOf(chatType) != -1)
+                    else if (Config.FilteredChannels.IndexOf(chatType) == -1)
                     {
-
-                        Config.RecordingChannels.Remove(chatType);
+                        Config.FilteredChannels.Add(chatType);
                     }
-                    Config.RecordingChannels = Config.RecordingChannels.Distinct().ToList();
-                    Config.RecordingChannels.Sort();
+                    Config.FilteredChannels = Config.FilteredChannels.Distinct().ToList();
+                    Config.FilteredChannels.Sort();
                     Config.Save();
                 }
                 ImGui.NextColumn();

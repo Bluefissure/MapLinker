@@ -33,17 +33,6 @@ namespace MapLinker
         public Lumina.Excel.ExcelSheet<Aetheryte> Aetherytes = null;
         public Lumina.Excel.ExcelSheet<MapMarker> AetherytesMap = null;
 
-        public List<XivChatType> HiddenChatType = new List<XivChatType> {
-            XivChatType.None,
-            XivChatType.CustomEmote,
-            XivChatType.StandardEmote,
-            XivChatType.SystemMessage,
-            XivChatType.SystemError,
-            XivChatType.GatheringSystemMessage,
-            XivChatType.ErrorMessage,
-            XivChatType.RetainerSale
-        };
-
         public void Dispose()
         {
             Interface.CommandManager.RemoveHandler("/maplink");
@@ -168,7 +157,7 @@ namespace MapLinker
                 bool filteredOut = false;
                 bool alreadyInList = Config.MapLinkMessageList.Any(w => { return w.Text == messageText; });
                 if (Config.FilterDuplicates && alreadyInList) filteredOut = true;
-                if (!filteredOut && Config.RecordingChannels.IndexOf((ushort)type) == -1) filteredOut = true;
+                if (!filteredOut && Config.FilteredChannels.IndexOf((ushort)type) != -1) filteredOut = true;
                 if (!filteredOut)
                 {
                     Config.MapLinkMessageList.Add(new MapLinkMessage(

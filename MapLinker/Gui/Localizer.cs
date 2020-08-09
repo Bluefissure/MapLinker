@@ -70,7 +70,7 @@ namespace MapLinker.Gui
             zh.Add("CrossLinkShell6", "跨服通讯贝6");
             zh.Add("CrossLinkShell7", "跨服通讯贝7");
             zh.Add("CrossLinkShell8", "跨服通讯贝8");
-            zh.Add("Echo", "私语");
+            zh.Add("Echo", "默语");
             zh.Add("Automatically record messages with maplink and retrieve later.", "使用自动记录消息中的地图坐标并在之后检索。");
             zh.Add("Add an option to call /tp to teleport to the nearest aetheryte.\nMake sure you have downloaded Teleporter Plugin.", "调用 /tp 传送至最近的以太水晶。\n请确保已启用 Teleporter 插件。");
             zh.Add("Add an option to call /coord  to retrieval maplinks.\nMake sure you have downloaded ChatCoordinates Plugin.", "调用 /coord  生成地图坐标。\n请确保已启用 ChatCoordinates 插件。");
