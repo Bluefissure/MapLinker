@@ -35,6 +35,7 @@ namespace MapLinker
 
         public void Dispose()
         {
+            Interface.Framework.Gui.Chat.OnChatMessage -= Chat_OnChatMessage;
             Interface.CommandManager.RemoveHandler("/maplink");
             Gui?.Dispose();
             Interface?.Dispose();
@@ -53,7 +54,7 @@ namespace MapLinker
                 HelpMessage = "/maplink - open the maplink panel."
             });
             Gui = new PluginUi(this);
-            pluginInterface.Framework.Gui.Chat.OnChatMessage += Chat_OnChatMessage;
+            Interface.Framework.Gui.Chat.OnChatMessage += Chat_OnChatMessage;
         }
         public void CommandHandler(string command, string arguments)
         {
@@ -145,8 +146,10 @@ namespace MapLinker
                     hasMapLink = true;
                     float fudge = 0.05f;
                     scale = mapLinkload.TerritoryType.Map.Value.SizeFactor;
-                    coordX = ConvertRawPositionToMapCoordinate(mapLinkload.RawX, scale) - fudge;
-                    coordY = ConvertRawPositionToMapCoordinate(mapLinkload.RawY, scale) - fudge;
+                    // coordX = ConvertRawPositionToMapCoordinate(mapLinkload.RawX, scale) - fudge;
+                    // coordY = ConvertRawPositionToMapCoordinate(mapLinkload.RawY, scale) - fudge;
+                    coordX = mapLinkload.XCoord;
+                    coordY = mapLinkload.YCoord;
                     Log($"TerritoryId: {mapLinkload.TerritoryType.RowId} {mapLinkload.PlaceName} ({coordX} ,{coordY})");
                     
                 }

@@ -32,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dalamud">
-      <HintPath>..\..\..\..\Git\Dalamud\Dalamud\bin\Debug\Dalamud.dll</HintPath>
+    <Reference Include="Dalamud, Version=5.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Git\_Dalamud_\Dalamud\Dalamud\bin\Debug\Dalamud.dll</HintPath>
     </Reference>
     <Reference Include="ImGui.NET">
       <HintPath>..\..\..\..\Git\Dalamud\Dalamud\bin\Debug\ImGui.NET.dll</HintPath>
@@ -41,11 +42,13 @@
     <Reference Include="ImGuiScene">
       <HintPath>..\..\..\..\Git\Dalamud\Dalamud\bin\Debug\ImGuiScene.dll</HintPath>
     </Reference>
-    <Reference Include="Lumina">
-      <HintPath>..\..\..\..\Git\Dalamud\Dalamud\bin\Debug\Lumina.dll</HintPath>
+    <Reference Include="Lumina, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Git\_Dalamud_\Dalamud\Dalamud\bin\Debug\Lumina.dll</HintPath>
     </Reference>
-    <Reference Include="Lumina.Generated">
-      <HintPath>..\..\..\..\Git\Dalamud\Dalamud\bin\Debug\Lumina.Generated.dll</HintPath>
+    <Reference Include="Lumina.Excel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Git\_Dalamud_\Dalamud\Dalamud\bin\Debug\Lumina.Excel.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -85,7 +88,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetDir)\MapLinker.dll D:\Code\Git\Dalamud\Dalamud\bin\Debug\XIVLauncher\testPlugins\MapLinker\1.0.1.0\ /K /D /H /Y
-xcopy $(TargetDir)\MapLinker.pdb D:\Code\Git\Dalamud\Dalamud\bin\Debug\XIVLauncher\testPlugins\MapLinker\1.0.1.0\ /K /D /H /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy $(TargetDir)\MapLinker.dll D:\Code\Git\_Dalamud_\Dalamud\Dalamud\bin\Debug\XIVLauncher\testPlugins\MapLinker\1.0.1.0\ /K /D /H /Y
+xcopy $(TargetDir)\MapLinker.pdb D:\Code\Git\_Dalamud_\Dalamud\Dalamud\bin\Debug\XIVLauncher\testPlugins\MapLinker\1.0.1.0\ /K /D /H /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
