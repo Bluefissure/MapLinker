@@ -76,6 +76,8 @@ namespace MapLinker.Gui
             zh.Add("Add an option to call /coord  to retrieval maplinks.\nMake sure you have downloaded ChatCoordinates Plugin.", "调用 /coord  生成地图坐标。\n请确保已启用 ChatCoordinates 插件。");
             zh.Add("Maplinks", "地图坐标");
             zh.Add("Sender", "发送者");
+            zh.Add("Timeout", "超时");
+            zh.Add("Maplink within timeout will be filtered by it's maplink instead of full text.", "超时内的Maplink将由其Maplink而不是全文过滤。");
             zh.Add("Message", "消息");
             zh.Add("Time", "时间");
             zh.Add("Retrieve", "检索");

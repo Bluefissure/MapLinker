@@ -23,6 +23,7 @@ namespace MapLinker
         public bool Recording = true;
         public bool Coord = false;
         public bool Teleport = false;
+        public int FilterDupTimeout = 5;
         public bool PrintMessage = false;
         public bool PrintError = true;
         public List<ushort> FilteredChannels = new List<ushort>();

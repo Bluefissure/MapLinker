@@ -157,13 +157,7 @@ namespace MapLinker
             string messageText = message.TextValue;
             if (hasMapLink)
             {
-                bool filteredOut = false;
-                bool alreadyInList = Config.MapLinkMessageList.Any(w => { return w.Text == messageText; });
-                if (Config.FilterDuplicates && alreadyInList) filteredOut = true;
-                if (!filteredOut && Config.FilteredChannels.IndexOf((ushort)type) != -1) filteredOut = true;
-                if (!filteredOut)
-                {
-                    Config.MapLinkMessageList.Add(new MapLinkMessage(
+                var newMapLinkMessage = new MapLinkMessage(
                         (ushort)type,
                         sender.TextValue,
                         messageText,
@@ -173,7 +167,25 @@ namespace MapLinker
                         maplinkPayload.TerritoryType.RowId,
                         maplinkPayload.PlaceName,
                         DateTime.Now
-                    ));
+                    );
+                bool filteredOut = false;
+                bool alreadyInList = Config.MapLinkMessageList.Any(w => {
+                    bool sameText = w.Text == newMapLinkMessage.Text;
+                    var fiveMin = new TimeSpan(0, Config.FilterDupTimeout, 0);
+                    if (newMapLinkMessage.RecordTime < w.RecordTime + fiveMin)
+                    {
+                        bool sameX = (int)(w.X * 10) == (int)(newMapLinkMessage.X * 10);
+                        bool sameY = (int)(w.Y * 10) == (int)(newMapLinkMessage.Y * 10);
+                        bool sameTerritory = w.TerritoryId == newMapLinkMessage.TerritoryId;
+                        return sameTerritory && sameX && sameY;
+                    }
+                    return sameText;
+                });
+                if (Config.FilterDuplicates && alreadyInList) filteredOut = true;
+                if (!filteredOut && Config.FilteredChannels.IndexOf((ushort)type) != -1) filteredOut = true;
+                if (!filteredOut)
+                {
+                    Config.MapLinkMessageList.Add(newMapLinkMessage);
                     Config.Save();
                 }
             }

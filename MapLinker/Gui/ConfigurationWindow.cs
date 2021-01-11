@@ -111,6 +111,10 @@ namespace MapLinker.Gui
         private void DrawFilters()
         {
             if (ImGui.Checkbox(_localizer.Localize("Filter out duplicates"), ref Config.FilterDuplicates)) Config.Save();
+            ImGui.SameLine();
+            if (ImGui.DragInt(_localizer.Localize("Timeout"), ref Config.FilterDupTimeout, 1,1,60)) Config.Save();
+            if (Plugin.Config.ShowTooltips && ImGui.IsItemHovered())
+                ImGui.SetTooltip(_localizer.Localize("Maplink within timeout will be filtered by it's maplink instead of full text."));
             ImGui.Columns(4, "FiltersTable", true);
             foreach (ushort chatType in Enum.GetValues(typeof(XivChatType)))
             {
@@ -145,6 +149,11 @@ namespace MapLinker.Gui
             int columns = 4;
             if (Config.Coord) columns++;
             if (Config.Teleport) columns++;
+            if (ImGui.Button(_localizer.Localize("Clear")))
+            {
+                Config.MapLinkMessageList.Clear();
+                Config.Save();
+            }
             ImGui.Columns(columns, "Maplinks", true);
             ImGui.Separator();
             ImGui.Text(_localizer.Localize("Sender")); ImGui.NextColumn();
@@ -203,12 +212,6 @@ namespace MapLinker.Gui
             if (delete != -1)
             {
                 Config.MapLinkMessageList.RemoveAt(delete);
-                Config.Save();
-            }
-            ImGui.Columns(1);
-            if (ImGui.Button(_localizer.Localize("Clear")))
-            {
-                Config.MapLinkMessageList.Clear();
                 Config.Save();
             }
 
