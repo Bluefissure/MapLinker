@@ -21,8 +21,8 @@ MapLinker is a dalamud plugin that can record the maplink information existing i
 ## Features
 
 The `/maplink` command calls out the config panel. After that, most of the instructions are in the popup instructions of that panel. It should be emphasized that the retrieval and teleport depend on other plugins:
--View (retrieve): Requires `ChatCoordinates` plugin, the function is to mark this maplink in the map
--Teleport: Requires `Teleporter` plugin, the function is to teleport to the nearest crystal
+- View (retrieve): Requires `ChatCoordinates` plugin, the function is to mark this maplink in the map
+- Teleport: Requires `Teleporter` plugin, the function is to teleport to the nearest crystal
 
 ## Installation
 
