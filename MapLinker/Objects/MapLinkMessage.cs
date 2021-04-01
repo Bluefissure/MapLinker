@@ -2,7 +2,6 @@
 using Dalamud;
 using System.Collections.Generic;
 using Lumina.Excel.GeneratedSheets;
-using Dalamud.DiscordBot;
 
 namespace MapLinker.Objects
 {

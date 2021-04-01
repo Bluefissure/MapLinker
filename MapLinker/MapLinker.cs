@@ -169,10 +169,12 @@ namespace MapLinker
                         DateTime.Now
                     );
                 bool filteredOut = false;
+                if (sender.TextValue.ToLower() == "sonar")
+                    filteredOut = true;
                 bool alreadyInList = Config.MapLinkMessageList.Any(w => {
                     bool sameText = w.Text == newMapLinkMessage.Text;
-                    var fiveMin = new TimeSpan(0, Config.FilterDupTimeout, 0);
-                    if (newMapLinkMessage.RecordTime < w.RecordTime + fiveMin)
+                    var timeoutMin = new TimeSpan(0, Config.FilterDupTimeout, 0);
+                    if (newMapLinkMessage.RecordTime < w.RecordTime + timeoutMin)
                     {
                         bool sameX = (int)(w.X * 10) == (int)(newMapLinkMessage.X * 10);
                         bool sameY = (int)(w.Y * 10) == (int)(newMapLinkMessage.Y * 10);
