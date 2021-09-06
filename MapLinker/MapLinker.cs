@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Dalamud;
 using Dalamud.Plugin;
 using Dalamud.Game.Command;
-using Dalamud.Game.ClientState.Actors.Types;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Lumina;
-using System.Text;
-using System.Threading.Tasks;
 using Lumina.Excel.GeneratedSheets;
-using ImGuiScene;
-using System.Security.Principal;
 using MapLinker.Objects;
+using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game;
+using Dalamud.Data;
+using Dalamud.Game.Gui;
+using Dalamud.Logging;
 
 namespace MapLinker
 {
@@ -23,38 +21,52 @@ namespace MapLinker
         public string Name => "MapLinker";
         public PluginUi Gui { get; private set; }
         public DalamudPluginInterface Interface { get; private set; }
+        public CommandManager CommandManager { get; private set; }
+        public DataManager DataManager { get; private set; }
+        public ClientState ClientState { get; private set; }
+        public Framework Framework { get; private set; }
+        public ChatGui ChatGui { get; private set; }
+
         public Configuration Config { get; private set; }
-        public PlayerCharacter LocalPlayer => Interface.ClientState.LocalPlayer;
+        public PlayerCharacter LocalPlayer => ClientState.LocalPlayer;
         public bool IsLoggedIn => LocalPlayer != null;
         public bool IsInHomeWorld => LocalPlayer?.CurrentWorld == LocalPlayer?.HomeWorld;
-
-        public CommandManager CommandManager = null;
 
         public Lumina.Excel.ExcelSheet<Aetheryte> Aetherytes = null;
         public Lumina.Excel.ExcelSheet<MapMarker> AetherytesMap = null;
 
         public void Dispose()
         {
-            Interface.Framework.Gui.Chat.OnChatMessage -= Chat_OnChatMessage;
-            Interface.CommandManager.RemoveHandler("/maplink");
+            ChatGui.ChatMessage -= Chat_OnChatMessage;
+            CommandManager.RemoveHandler("/maplink");
             Gui?.Dispose();
             Interface?.Dispose();
         }
 
-        public void Initialize(DalamudPluginInterface pluginInterface)
+        public MapLinker(
+            DalamudPluginInterface pluginInterface,
+            ChatGui chat,
+            CommandManager commands,
+            DataManager data,
+            ClientState clientState,
+            Framework framework)
         {
             Interface = pluginInterface;
-            CommandManager = pluginInterface.CommandManager;
-            Aetherytes = pluginInterface.Data.GetExcelSheet<Aetheryte>(pluginInterface.ClientState.ClientLanguage);
-            AetherytesMap = pluginInterface.Data.GetExcelSheet<MapMarker>(pluginInterface.ClientState.ClientLanguage);
+            ClientState = clientState;
+            Framework = framework;
+            CommandManager = commands;
+            DataManager = data;
+            ChatGui = chat;
+            Aetherytes = DataManager.GetExcelSheet<Aetheryte>(ClientState.ClientLanguage);
+            AetherytesMap = DataManager.GetExcelSheet<MapMarker>(ClientState.ClientLanguage);
             Config = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Config.Initialize(pluginInterface);
-            Interface.CommandManager.AddHandler("/maplink", new CommandInfo(CommandHandler)
+            CommandManager.AddHandler("/maplink", new CommandInfo(CommandHandler)
             {
                 HelpMessage = "/maplink - open the maplink panel."
             });
             Gui = new PluginUi(this);
-            Interface.Framework.Gui.Chat.OnChatMessage += Chat_OnChatMessage;
+            ChatGui.ChatMessage += Chat_OnChatMessage;
         }
         public void CommandHandler(string command, string arguments)
         {
@@ -71,14 +83,14 @@ namespace MapLinker
             if (!Config.PrintMessage) return;
             var msg = $"[{Name}] {message}";
             PluginLog.Log(msg);
-            Interface.Framework.Gui.Chat.Print(msg);
+            ChatGui.Print(msg);
         }
         public void LogError(string message)
         {
             if (!Config.PrintError) return;
             var msg = $"[{Name}] {message}";
             PluginLog.LogError(msg);
-            Interface.Framework.Gui.Chat.PrintError(msg);
+            ChatGui.PrintError(msg);
         }
         private int ConvertMapCoordinateToRawPosition(float pos, float scale)
         {
@@ -144,7 +156,7 @@ namespace MapLinker
                 {
                     maplinkPayload = mapLinkload;
                     hasMapLink = true;
-                    float fudge = 0.05f;
+                    // float fudge = 0.05f;
                     scale = mapLinkload.TerritoryType.Map.Value.SizeFactor;
                     // coordX = ConvertRawPositionToMapCoordinate(mapLinkload.RawX, scale) - fudge;
                     // coordY = ConvertRawPositionToMapCoordinate(mapLinkload.RawY, scale) - fudge;
