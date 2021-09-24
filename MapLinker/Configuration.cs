@@ -23,7 +23,7 @@ namespace MapLinker
         public bool Recording = true;
         public bool Coord = false;
         public bool Teleport = false;
-		public bool SortDesc = false;
+        public bool SortDesc = false;
         public int FilterDupTimeout = 5;
         public bool PrintMessage = false;
         public bool PrintError = true;
