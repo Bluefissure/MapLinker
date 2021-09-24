@@ -181,7 +181,7 @@ namespace MapLinker.Gui
             }
             for (int i = 0; i < Config.MapLinkMessageList.Count(); i++)
             {
-                var maplinkMessage = Config.MapLinkMessageList[i];
+                var maplinkMessage = listToDisplay[i];
                 ImGui.Text(maplinkMessage.Sender); ImGui.NextColumn();
                 ImGui.TextWrapped(maplinkMessage.Text); ImGui.NextColumn();
                 ImGui.Text(maplinkMessage.RecordTime.ToString()); ImGui.NextColumn();
