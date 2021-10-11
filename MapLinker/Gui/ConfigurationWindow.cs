@@ -90,6 +90,7 @@ namespace MapLinker.Gui
                                  "Make sure you have downloaded ChatCoordinates Plugin."));
 
             if (ImGui.Checkbox(_localizer.Localize("Call /tp to teleport to the nearest aetheryte"), ref Config.Teleport)) Config.Save();
+            if (ImGui.Checkbox(_localizer.Localize("Reverse sorting of maplinks"), ref Config.Teleport)) Config.Save();
             if (Config.ShowTooltips && ImGui.IsItemHovered())
                 ImGui.SetTooltip(_localizer.Localize("Add an option to call /tp to teleport to the nearest aetheryte.\n" +
                                  "Make sure you have downloaded Teleporter Plugin."));
@@ -171,9 +172,17 @@ namespace MapLinker.Gui
             ImGui.Text(_localizer.Localize("Delete")); ImGui.NextColumn();
             ImGui.Separator();
             int delete = -1;
+            List<MapLinkMessage> listToDisplay = Config.MapLinkMessageList;
+            if (Config.SortDesc)
+            {
+                listToDisplay = listToDisplay.OrderByDescending(mlm => mlm.RecordTime).ToList();
+            } else
+            {
+                listToDisplay = listToDisplay.OrderBy(mlm => mlm.RecordTime).ToList();
+            }
             for (int i = 0; i < Config.MapLinkMessageList.Count(); i++)
             {
-                var maplinkMessage = Config.MapLinkMessageList[i];
+                var maplinkMessage = listToDisplay[i];
                 ImGui.Text(maplinkMessage.Sender); ImGui.NextColumn();
                 ImGui.TextWrapped(maplinkMessage.Text); ImGui.NextColumn();
                 ImGui.Text(maplinkMessage.RecordTime.ToString()); ImGui.NextColumn();
