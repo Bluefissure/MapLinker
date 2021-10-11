@@ -21,7 +21,6 @@ namespace MapLinker
         public List<MapLinkMessage> MapLinkMessageList = new List<MapLinkMessage>();
 
         public bool Recording = true;
-        public bool Coord = false;
         public bool Teleport = false;
         public bool SortDesc = false;
         public int FilterDupTimeout = 5;

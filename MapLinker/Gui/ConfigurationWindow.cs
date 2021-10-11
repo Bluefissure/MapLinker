@@ -7,6 +7,7 @@ using ImGuiNET;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Data;
 using Lumina.Excel.GeneratedSheets;
+using MapLinker.Objects;
 
 namespace MapLinker.Gui
 {
@@ -84,16 +85,11 @@ namespace MapLinker.Gui
             ImGui.SameLine();
             if (ImGui.Checkbox("##hideTooltipsOnOff", ref Config.ShowTooltips)) Config.Save();
 
-
-            if (Config.ShowTooltips && ImGui.IsItemHovered())
-                ImGui.SetTooltip(_localizer.Localize("Add an option to call /coord  to retrieval maplinks.\n" +
-                                 "Make sure you have downloaded ChatCoordinates Plugin."));
-
             if (ImGui.Checkbox(_localizer.Localize("Call /tp to teleport to the nearest aetheryte"), ref Config.Teleport)) Config.Save();
-            if (ImGui.Checkbox(_localizer.Localize("Reverse sorting of maplinks"), ref Config.Teleport)) Config.Save();
             if (Config.ShowTooltips && ImGui.IsItemHovered())
                 ImGui.SetTooltip(_localizer.Localize("Add an option to call /tp to teleport to the nearest aetheryte.\n" +
                                  "Make sure you have downloaded Teleporter Plugin."));
+            if (ImGui.Checkbox(_localizer.Localize("Reverse sorting of maplinks"), ref Config.SortDesc)) Config.Save();
             ImGui.TextUnformatted(_localizer.Localize("Language:"));
             if (Plugin.Config.ShowTooltips && ImGui.IsItemHovered())
                 ImGui.SetTooltip(_localizer.Localize("Change the UI Language."));
@@ -148,8 +144,7 @@ namespace MapLinker.Gui
         private void DrawMaplinks()
         {
             // sender, text, time, view, tp, del
-            int columns = 4;
-            if (Config.Coord) columns++;
+            int columns = 5;
             if (Config.Teleport) columns++;
             if (ImGui.Button(_localizer.Localize("Clear")))
             {
@@ -161,10 +156,7 @@ namespace MapLinker.Gui
             ImGui.Text(_localizer.Localize("Sender")); ImGui.NextColumn();
             ImGui.Text(_localizer.Localize("Message")); ImGui.NextColumn();
             ImGui.Text(_localizer.Localize("Time")); ImGui.NextColumn();
-            if (Config.Coord)
-            {
-                ImGui.Text(_localizer.Localize("Retrieve")); ImGui.NextColumn();
-            }
+            ImGui.Text(_localizer.Localize("Retrieve")); ImGui.NextColumn();
             if (Config.Teleport)
             {
                 ImGui.Text(_localizer.Localize("Teleport")); ImGui.NextColumn();

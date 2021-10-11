@@ -30,7 +30,7 @@ namespace MapLinker.Gui
             zh.Add("General Settings", "通用设置");
             zh.Add("Recording", "记录中");
             zh.Add("Tooltips", "选项说明");
-            zh.Add("Call /coord to retrieval map links", "使用 /coord 命令标记地图");
+            zh.Add("Reverse sorting of maplinks", "反向排序");
             zh.Add("Call /tp to teleport to the nearest aetheryte", "使用 /tp 命令进行传送");
             zh.Add("Language:", "语言");
             zh.Add("Print Debug Message", "打印调试消息");
@@ -73,7 +73,6 @@ namespace MapLinker.Gui
             zh.Add("Echo", "默语");
             zh.Add("Automatically record messages with maplink and retrieve later.", "使用自动记录消息中的地图坐标并在之后检索。");
             zh.Add("Add an option to call /tp to teleport to the nearest aetheryte.\nMake sure you have downloaded Teleporter Plugin.", "调用 /tp 传送至最近的以太水晶。\n请确保已启用 Teleporter 插件。");
-            zh.Add("Add an option to call /coord  to retrieval maplinks.\nMake sure you have downloaded ChatCoordinates Plugin.", "调用 /coord  生成地图坐标。\n请确保已启用 ChatCoordinates 插件。");
             zh.Add("Maplinks", "地图坐标");
             zh.Add("Sender", "发送者");
             zh.Add("Timeout", "超时");
