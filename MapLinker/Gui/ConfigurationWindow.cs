@@ -4,7 +4,9 @@ using System.Linq;
 using System.Numerics;
 using Dalamud.Game.Text;
 using ImGuiNET;
-using MapLinker.Objects;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
+using Dalamud.Data;
+using Lumina.Excel.GeneratedSheets;
 
 namespace MapLinker.Gui
 {
@@ -83,7 +85,6 @@ namespace MapLinker.Gui
             if (ImGui.Checkbox("##hideTooltipsOnOff", ref Config.ShowTooltips)) Config.Save();
 
 
-            if (ImGui.Checkbox(_localizer.Localize("Call /coord to retrieval map links"), ref Config.Coord)) Config.Save();
             if (Config.ShowTooltips && ImGui.IsItemHovered())
                 ImGui.SetTooltip(_localizer.Localize("Add an option to call /coord  to retrieval maplinks.\n" +
                                  "Make sure you have downloaded ChatCoordinates Plugin."));
@@ -176,15 +177,14 @@ namespace MapLinker.Gui
                 ImGui.Text(maplinkMessage.Sender); ImGui.NextColumn();
                 ImGui.TextWrapped(maplinkMessage.Text); ImGui.NextColumn();
                 ImGui.Text(maplinkMessage.RecordTime.ToString()); ImGui.NextColumn();
-                if (Config.Coord)
+                if(ImGui.Button(_localizer.Localize("View") + "##" + i.ToString() ))
                 {
-                    if(ImGui.Button(_localizer.Localize("View") + "##" + i.ToString() ))
-                    {
-                        Plugin.Log($"Viewing {maplinkMessage.Text}");
-                        Plugin.CommandManager.ProcessCommand($"/coord {maplinkMessage.X} {maplinkMessage.Y}: {maplinkMessage.PlaceName}");
-                    }
-                    ImGui.NextColumn();
+                    Plugin.Log($"Viewing {maplinkMessage.Text}");
+                    var map = Plugin.DataManager.GetExcelSheet<TerritoryType>().GetRow(maplinkMessage.TerritoryId).Map;
+                    var maplink = new MapLinkPayload(maplinkMessage.TerritoryId, map.Row, maplinkMessage.X, maplinkMessage.Y);
+                    Plugin.GameGui.OpenMapWithMapLink(maplink);
                 }
+                ImGui.NextColumn();
                 if (Config.Teleport)
                 {
                     if (ImGui.Button(_localizer.Localize("Tele") + "##" + i.ToString()))

@@ -26,6 +26,7 @@ namespace MapLinker
         public ClientState ClientState { get; private set; }
         public Framework Framework { get; private set; }
         public ChatGui ChatGui { get; private set; }
+        public GameGui GameGui { get; private set; }
 
         public Configuration Config { get; private set; }
         public PlayerCharacter LocalPlayer => ClientState.LocalPlayer;
@@ -49,7 +50,8 @@ namespace MapLinker
             CommandManager commands,
             DataManager data,
             ClientState clientState,
-            Framework framework)
+            Framework framework,
+            GameGui gameGui)
         {
             Interface = pluginInterface;
             ClientState = clientState;
@@ -57,6 +59,7 @@ namespace MapLinker
             CommandManager = commands;
             DataManager = data;
             ChatGui = chat;
+            GameGui = gameGui;
             Aetherytes = DataManager.GetExcelSheet<Aetheryte>(ClientState.ClientLanguage);
             AetherytesMap = DataManager.GetExcelSheet<MapMarker>(ClientState.ClientLanguage);
             Config = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
