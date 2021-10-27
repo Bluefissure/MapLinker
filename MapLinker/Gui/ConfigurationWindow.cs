@@ -180,26 +180,14 @@ namespace MapLinker.Gui
                 ImGui.Text(maplinkMessage.RecordTime.ToString()); ImGui.NextColumn();
                 if(ImGui.Button(_localizer.Localize("View") + "##" + i.ToString() ))
                 {
-                    Plugin.Log($"Viewing {maplinkMessage.Text}");
-                    var map = Plugin.DataManager.GetExcelSheet<TerritoryType>().GetRow(maplinkMessage.TerritoryId).Map;
-                    var maplink = new MapLinkPayload(maplinkMessage.TerritoryId, map.Row, maplinkMessage.X, maplinkMessage.Y);
-                    Plugin.GameGui.OpenMapWithMapLink(maplink);
+                    Plugin.PlaceMapMarker(maplinkMessage);
                 }
                 ImGui.NextColumn();
                 if (Config.Teleport)
                 {
                     if (ImGui.Button(_localizer.Localize("Tele") + "##" + i.ToString()))
                     {
-                        var aetheryteName = Plugin.GetNearestAetheryte(maplinkMessage);
-                        if(aetheryteName != "")
-                        {
-                            Plugin.Log($"Teleporting to {aetheryteName}");
-                            Plugin.CommandManager.ProcessCommand($"/tp {aetheryteName}");
-                        }
-                        else
-                        {
-                            Plugin.LogError($"Cannot find nearest aetheryte of {maplinkMessage.PlaceName}({maplinkMessage.X}, {maplinkMessage.Y}).");
-                        }
+                        Plugin.TeleportToAetheryte(maplinkMessage);
                     }
                     ImGui.NextColumn();
                 }

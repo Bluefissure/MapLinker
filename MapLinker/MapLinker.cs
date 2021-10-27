@@ -13,6 +13,7 @@ using Dalamud.Game;
 using Dalamud.Data;
 using Dalamud.Game.Gui;
 using Dalamud.Logging;
+using System.Collections.Generic;
 
 namespace MapLinker
 {
@@ -74,8 +75,67 @@ namespace MapLinker
         public void CommandHandler(string command, string arguments)
         {
             var args = arguments.Trim().Replace("\"", string.Empty);
+            string[] argsArray = args.Split(" ");
 
-            if (string.IsNullOrEmpty(args) || args.Equals("config", StringComparison.OrdinalIgnoreCase))
+            if (argsArray.Length == 2)
+            {
+                int listIndex;
+                List<MapLinkMessage> mapList = Config.MapLinkMessageList;
+                if (Config.SortDesc)
+                {
+                    mapList = mapList.OrderByDescending(mlm => mlm.RecordTime).ToList();
+                }
+                else
+                {
+                    mapList = mapList.OrderBy(mlm => mlm.RecordTime).ToList();
+                }
+
+                // Convert to zero-based numbering
+                if (argsArray[1].Equals("first", StringComparison.OrdinalIgnoreCase))
+                {
+                    listIndex = 0;
+                }
+                else if (argsArray[1].Equals("last", StringComparison.OrdinalIgnoreCase))
+                {
+                    listIndex = mapList.Count - 1;
+                }
+                else if (int.TryParse(argsArray[1], out listIndex))
+                {
+                    if (listIndex <= 0 || listIndex > mapList.Count)
+                    {
+                        listIndex = -1;
+                    }
+                    else
+                    {
+                        listIndex--;
+                    }
+                }
+                else
+                {
+                    listIndex = -1;
+                }
+
+                if (listIndex < 0 || listIndex > mapList.Count)
+                {
+                    Gui.ConfigWindow.Visible = !Gui.ConfigWindow.Visible;
+                    return;
+                }
+
+                if (argsArray[0].Equals("use", StringComparison.OrdinalIgnoreCase))
+                {
+                    PlaceMapMarker(mapList[listIndex]);
+                    TeleportToAetheryte(mapList[listIndex]);
+                }
+                else if (argsArray[0].Equals("go", StringComparison.OrdinalIgnoreCase))
+                {
+                    TeleportToAetheryte(mapList[listIndex]);
+                }
+                else if (argsArray[0].Equals("map", StringComparison.OrdinalIgnoreCase))
+                {
+                    PlaceMapMarker(mapList[listIndex]);
+                }
+            }
+            else
             {
                 Gui.ConfigWindow.Visible = !Gui.ConfigWindow.Visible;
                 return;
@@ -166,7 +226,6 @@ namespace MapLinker
                     coordX = mapLinkload.XCoord;
                     coordY = mapLinkload.YCoord;
                     Log($"TerritoryId: {mapLinkload.TerritoryType.RowId} {mapLinkload.PlaceName} ({coordX} ,{coordY})");
-                    
                 }
             }
             string messageText = message.TextValue;
@@ -208,5 +267,27 @@ namespace MapLinker
             }
         }
 
+        public void TeleportToAetheryte(MapLinkMessage maplinkMessage)
+        {
+            if (!Config.Teleport) return;
+            var aetheryteName = GetNearestAetheryte(maplinkMessage);
+            if (aetheryteName != "")
+            {
+                Log($"Teleporting to {aetheryteName}");
+                CommandManager.ProcessCommand($"/tp {aetheryteName}");
+            }
+            else
+            {
+                LogError($"Cannot find nearest aetheryte of {maplinkMessage.PlaceName}({maplinkMessage.X}, {maplinkMessage.Y}).");
+            }
+        }
+
+        public void PlaceMapMarker(MapLinkMessage maplinkMessage)
+        {
+            Log($"Viewing {maplinkMessage.Text}");
+            var map = DataManager.GetExcelSheet<TerritoryType>().GetRow(maplinkMessage.TerritoryId).Map;
+            var maplink = new MapLinkPayload(maplinkMessage.TerritoryId, map.Row, maplinkMessage.X, maplinkMessage.Y);
+            GameGui.OpenMapWithMapLink(maplink);
+        }
     }
 }
