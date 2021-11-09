@@ -203,6 +203,13 @@ namespace MapLinker
                 if (!filteredOut)
                 {
                     Config.MapLinkMessageList.Add(newMapLinkMessage);
+                    if (Config.MapLinkMessageList.Count > Config.MaxRecordings)
+                    {
+                        var tempList = Config.MapLinkMessageList.OrderBy(e => e.RecordTime);
+                        Config.MapLinkMessageList.RemoveRange(0, Config.MapLinkMessageList.Count - Config.MaxRecordings);
+                        var infoMsg = $"There are too many records, truncated to the latest {Config.MaxRecordings} records";
+                        PluginLog.Information(infoMsg);
+                    }
                     Config.Save();
                 }
             }

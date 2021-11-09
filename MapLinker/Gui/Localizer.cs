@@ -86,6 +86,7 @@ namespace MapLinker.Gui
             zh.Add("Tele", "传送");
             zh.Add("Del", "删除");
             zh.Add("Clear", "清空");
+            zh.Add("Max Records", "最多记录");
         }
     }
 }

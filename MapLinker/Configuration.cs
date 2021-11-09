@@ -24,6 +24,7 @@ namespace MapLinker
         public bool Teleport = false;
         public bool SortDesc = false;
         public int FilterDupTimeout = 5;
+        public int MaxRecordings = 100;
         public bool PrintMessage = false;
         public bool PrintError = true;
         public List<ushort> FilteredChannels = new List<ushort>();

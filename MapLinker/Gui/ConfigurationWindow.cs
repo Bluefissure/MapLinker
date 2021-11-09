@@ -90,6 +90,8 @@ namespace MapLinker.Gui
                 ImGui.SetTooltip(_localizer.Localize("Add an option to call /tp to teleport to the nearest aetheryte.\n" +
                                  "Make sure you have downloaded Teleporter Plugin."));
             if (ImGui.Checkbox(_localizer.Localize("Reverse sorting of maplinks"), ref Config.SortDesc)) Config.Save();
+            if (ImGui.DragInt(_localizer.Localize("Max Records"), ref Config.MaxRecordings, 1, 10, 100)) Config.Save();
+
             ImGui.TextUnformatted(_localizer.Localize("Language:"));
             if (Plugin.Config.ShowTooltips && ImGui.IsItemHovered())
                 ImGui.SetTooltip(_localizer.Localize("Change the UI Language."));
@@ -103,14 +105,13 @@ namespace MapLinker.Gui
             }
             if (ImGui.Checkbox(_localizer.Localize("Print Debug Message"), ref Config.PrintMessage)) Config.Save();
             if (ImGui.Checkbox(_localizer.Localize("Print Error Message"), ref Config.PrintError)) Config.Save();
-
         }
 
         private void DrawFilters()
         {
             if (ImGui.Checkbox(_localizer.Localize("Filter out duplicates"), ref Config.FilterDuplicates)) Config.Save();
             ImGui.SameLine();
-            if (ImGui.DragInt(_localizer.Localize("Timeout"), ref Config.FilterDupTimeout, 1,1,60)) Config.Save();
+            if (ImGui.DragInt(_localizer.Localize("Timeout"), ref Config.FilterDupTimeout, 1, 1, 60)) Config.Save();
             if (Plugin.Config.ShowTooltips && ImGui.IsItemHovered())
                 ImGui.SetTooltip(_localizer.Localize("Maplink within timeout will be filtered by it's maplink instead of full text."));
             ImGui.Columns(4, "FiltersTable", true);
