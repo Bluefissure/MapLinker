@@ -125,7 +125,7 @@ namespace MapLinker
                 var scale = maplinkMessage.Scale;
                 if (data.Territory.Value.RowId == maplinkMessage.TerritoryId)
                 {
-                    var mapMarker = AetherytesMap.GetRows().Where(m => (m.DataType == 3 && m.DataKey == data.RowId)).FirstOrDefault();
+                    var mapMarker = AetherytesMap.FirstOrDefault(m => (m.DataType == 3 && m.DataKey == data.RowId));
                     if (mapMarker == null)
                     {
                         LogError($"Cannot find aetherytes position for {maplinkMessage.PlaceName}#{data.PlaceName.Value.Name}");
