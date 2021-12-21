@@ -152,6 +152,13 @@ namespace MapLinker.Gui
                 Config.MapLinkMessageList.Clear();
                 Config.Save();
             }
+            // right alignment ?
+            ImGui.SameLine(ImGui.GetCursorPosX() + ImGui.GetColumnWidth() - ImGui.CalcTextSize(_localizer.Localize("Target")).X - ImGui.GetScrollX() - ImGui.GetStyle().ItemSpacing.X);
+            if (ImGui.Button(_localizer.Localize("Target")))
+            {
+                Plugin.GetTarget();
+                Config.Save();
+            }
             ImGui.Columns(columns, "Maplinks", true);
             ImGui.Separator();
             ImGui.Text(_localizer.Localize("Sender")); ImGui.NextColumn();

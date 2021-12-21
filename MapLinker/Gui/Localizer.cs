@@ -87,6 +87,7 @@ namespace MapLinker.Gui
             zh.Add("Del", "删除");
             zh.Add("Clear", "清空");
             zh.Add("Max Records", "最多记录");
+            zh.Add("Target", "目标");
         }
     }
 }

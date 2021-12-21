@@ -8,6 +8,7 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Lumina.Excel.GeneratedSheets;
 using MapLinker.Objects;
 using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game;
 using Dalamud.Data;
@@ -25,6 +26,7 @@ namespace MapLinker
         public CommandManager CommandManager { get; private set; }
         public DataManager DataManager { get; private set; }
         public ClientState ClientState { get; private set; }
+        public TargetManager TargetManager { get; private set; }
         public Framework Framework { get; private set; }
         public ChatGui ChatGui { get; private set; }
         public GameGui GameGui { get; private set; }
@@ -52,10 +54,12 @@ namespace MapLinker
             DataManager data,
             ClientState clientState,
             Framework framework,
-            GameGui gameGui)
+            GameGui gameGui,
+            TargetManager targetManager)
         {
             Interface = pluginInterface;
             ClientState = clientState;
+            TargetManager = targetManager;
             Framework = framework;
             CommandManager = commands;
             DataManager = data;
@@ -173,6 +177,15 @@ namespace MapLinker
             return ConvertRawPositionToMapCoordinate(rawPosition, scale);
         }
 
+        private double ToMapCoordinate(double val, float scale)
+        {
+            var c = scale / 100.0;
+
+            val *= c;
+            return ((41.0 / c) * ((val + 1024.0) / 2048.0)) + 1;
+        }
+
+
         public string GetNearestAetheryte(MapLinkMessage maplinkMessage)
         {
             string aetheryteName = "";
@@ -203,6 +216,50 @@ namespace MapLinker
                 }
             }
             return aetheryteName;
+        }
+
+        public void GetTarget()
+        {
+            string messageText = "";
+            float coordX = 0;
+            float coordY = 0;
+            float scale = 100;
+
+            var target = TargetManager.Target;
+            var territoryType = ClientState.TerritoryType;
+            var place = DataManager.GetExcelSheet<Map>(ClientState.ClientLanguage).FirstOrDefault(m => m.TerritoryType.Row == territoryType);
+            var placeName = place.PlaceName.Row;
+            scale = place.SizeFactor;
+            var placeNameRow = DataManager.GetExcelSheet<PlaceName>(ClientState.ClientLanguage).GetRow(placeName).Name;
+            if (target != null)
+            {
+                coordX = (float)ToMapCoordinate(target.Position.X, scale);
+                coordY = (float)ToMapCoordinate(target.Position.Z, scale);
+                messageText += placeNameRow;
+                messageText += " X:" + coordX.ToString("#0.0");
+                messageText += " Y:" + coordY.ToString("#0.0");
+                var newMapLinkMessage = new MapLinkMessage(
+                        (ushort)XivChatType.Debug,
+                        target.Name.ToString(),
+                        messageText,
+                        coordX,
+                        coordY,
+                        scale,
+                        territoryType,
+                        placeNameRow,
+                        DateTime.Now
+                    );
+                Config.MapLinkMessageList.Add(newMapLinkMessage);
+                if (Config.MapLinkMessageList.Count > Config.MaxRecordings)
+                {
+                    var tempList = Config.MapLinkMessageList.OrderBy(e => e.RecordTime);
+                    Config.MapLinkMessageList.RemoveRange(0, Config.MapLinkMessageList.Count - Config.MaxRecordings);
+                    var infoMsg = $"There are too many records, truncated to the latest {Config.MaxRecordings} records";
+                    PluginLog.Information(infoMsg);
+                }
+            }
+            
+
         }
 
         private void Chat_OnChatMessage(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
