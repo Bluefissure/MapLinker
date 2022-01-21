@@ -171,7 +171,7 @@ namespace MapLinker.Gui
             }
             ImGui.Text(_localizer.Localize("Delete")); ImGui.NextColumn();
             ImGui.Separator();
-            int delete = -1;
+            MapLinkMessage toDelete = null;
             List<MapLinkMessage> listToDisplay = Config.MapLinkMessageList;
             if (Config.SortDesc)
             {
@@ -180,7 +180,7 @@ namespace MapLinker.Gui
             {
                 listToDisplay = listToDisplay.OrderBy(mlm => mlm.RecordTime).ToList();
             }
-            for (int i = 0; i < Config.MapLinkMessageList.Count(); i++)
+            for (int i = 0; i < listToDisplay.Count(); i++)
             {
                 var maplinkMessage = listToDisplay[i];
                 ImGui.Text(maplinkMessage.Sender); ImGui.NextColumn();
@@ -201,14 +201,14 @@ namespace MapLinker.Gui
                 }
                 if (ImGui.Button(_localizer.Localize("Del") + "##" + i.ToString()))
                 {
-                    delete = i;
+                    toDelete = maplinkMessage;
                 }
                 ImGui.NextColumn();
                 ImGui.Separator();
             }
-            if (delete != -1)
+            if (null != toDelete)
             {
-                Config.MapLinkMessageList.RemoveAt(delete);
+                Config.MapLinkMessageList.Remove(toDelete);
                 Config.Save();
             }
 
