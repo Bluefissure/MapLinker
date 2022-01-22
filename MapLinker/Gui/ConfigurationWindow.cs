@@ -184,7 +184,7 @@ namespace MapLinker.Gui
             {
                 var maplinkMessage = listToDisplay[i];
                 ImGui.Text(maplinkMessage.Sender); ImGui.NextColumn();
-                ImGui.TextWrapped(maplinkMessage.Text); ImGui.NextColumn();
+                ImGui.TextUnformatted(maplinkMessage.Text); ImGui.NextColumn();
                 ImGui.Text(maplinkMessage.RecordTime.ToString()); ImGui.NextColumn();
                 if(ImGui.Button(_localizer.Localize("View") + "##" + i.ToString() ))
                 {
