@@ -5,32 +5,42 @@
     <LangVersion>9.0</LangVersion>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyVersion>1.1.4.1</AssemblyVersion>
+    <FileVersion>1.1.4.1</FileVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dalamud">
-      <HintPath>..\..\..\Dalamud\bin\Debug\Dalamud.dll</HintPath>
+      <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ImGui.NET">
-      <HintPath>..\..\..\Dalamud\bin\Debug\ImGui.NET.dll</HintPath>
+      <HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ImGuiScene">
-      <HintPath>..\..\..\Dalamud\bin\Debug\ImGuiScene.dll</HintPath>
+      <HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Lumina">
-      <HintPath>..\..\..\Dalamud\bin\Debug\Lumina.dll</HintPath>
+      <HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Lumina.Excel">
-      <HintPath>..\..\..\Dalamud\bin\Debug\Lumina.Excel.dll</HintPath>
+      <HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SDL2-CS">
-      <HintPath>..\..\..\Dalamud\bin\Debug\SDL2-CS.dll</HintPath>
+      <HintPath>$(DalamudLibPath)SDL2-CS.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="DalamudPackager" Version="2.1.6" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.6.0-preview3.19128.7" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
