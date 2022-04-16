@@ -44,7 +44,6 @@ namespace MapLinker
             ChatGui.ChatMessage -= Chat_OnChatMessage;
             CommandManager.RemoveHandler("/maplink");
             Gui?.Dispose();
-            Interface?.Dispose();
         }
 
         public MapLinker(
