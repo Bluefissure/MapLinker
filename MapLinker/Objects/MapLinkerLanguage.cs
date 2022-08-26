@@ -7,7 +7,7 @@ namespace MapLinker.Objects {
         English = ClientLanguage.English,
         German = ClientLanguage.German,
         French = ClientLanguage.French,
-        ChineseSimplified = ClientLanguage.ChineseSimplified,
+        //ChineseSimplified = ClientLanguage.ChineseSimplified,
         Client = 5
     }
 }
