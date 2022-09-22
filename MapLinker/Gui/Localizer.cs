@@ -77,7 +77,7 @@ namespace MapLinker.Gui
             zh.Add("Sender", "发送者");
             zh.Add("Timeout", "超时");
             zh.Add("Maplink within timeout will be filtered by it's maplink instead of full text.", "超时内的Maplink将由其Maplink而不是全文过滤。");
-            zh.Add("Bring the game to front with new maplink and flag it", "收到 maplink 时激活游戏并在地图显示");
+            zh.Add("Bring the game to front with new maplink", "收到 maplink 时激活游戏");
             zh.Add("Message", "消息");
             zh.Add("Time", "时间");
             zh.Add("Retrieve", "检索");

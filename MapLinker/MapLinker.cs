@@ -329,7 +329,6 @@ namespace MapLinker
                     if (Config.BringFront)
                     {
                         Native.Impl.Activate();
-                        PlaceMapMarker(newMapLinkMessage);
                     }
                 }
             }

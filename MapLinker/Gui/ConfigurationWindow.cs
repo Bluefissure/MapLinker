@@ -90,7 +90,7 @@ namespace MapLinker.Gui
                 ImGui.SetTooltip(_localizer.Localize("Add an option to call /tp to teleport to the nearest aetheryte.\n" +
                                  "Make sure you have downloaded Teleporter Plugin."));
             if (ImGui.Checkbox(_localizer.Localize("Reverse sorting of maplinks"), ref Config.SortDesc)) Config.Save();
-            if (ImGui.Checkbox(_localizer.Localize("Bring the game to front with new maplink and flag it"), ref Config.BringFront)) Config.Save();
+            if (ImGui.Checkbox(_localizer.Localize("Bring the game to front with new maplink"), ref Config.BringFront)) Config.Save();
             if (ImGui.DragInt(_localizer.Localize("Max Records"), ref Config.MaxRecordings, 1, 10, 100)) Config.Save();
 
             ImGui.TextUnformatted(_localizer.Localize("Language:"));
