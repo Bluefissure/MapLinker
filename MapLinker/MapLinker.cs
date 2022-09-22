@@ -326,6 +326,11 @@ namespace MapLinker
                         PluginLog.Information(infoMsg);
                     }
                     Config.Save();
+                    if (Config.BringFront)
+                    {
+                        Native.Impl.Activate();
+                        PlaceMapMarker(newMapLinkMessage);
+                    }
                 }
             }
         }

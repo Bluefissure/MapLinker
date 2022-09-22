@@ -90,6 +90,7 @@ namespace MapLinker.Gui
                 ImGui.SetTooltip(_localizer.Localize("Add an option to call /tp to teleport to the nearest aetheryte.\n" +
                                  "Make sure you have downloaded Teleporter Plugin."));
             if (ImGui.Checkbox(_localizer.Localize("Reverse sorting of maplinks"), ref Config.SortDesc)) Config.Save();
+            if (ImGui.Checkbox(_localizer.Localize("Bring the game to front with new maplink and flag it"), ref Config.BringFront)) Config.Save();
             if (ImGui.DragInt(_localizer.Localize("Max Records"), ref Config.MaxRecordings, 1, 10, 100)) Config.Save();
 
             ImGui.TextUnformatted(_localizer.Localize("Language:"));
@@ -162,7 +163,7 @@ namespace MapLinker.Gui
             ImGui.Columns(columns, "Maplinks", true);
             ImGui.Separator();
             ImGui.Text(_localizer.Localize("Sender")); ImGui.NextColumn();
-            ImGui.Text(_localizer.Localize("Message")); ImGui.NextColumn();
+            ImGui.TextWrapped(_localizer.Localize("Message")); ImGui.NextColumn();
             ImGui.Text(_localizer.Localize("Time")); ImGui.NextColumn();
             ImGui.Text(_localizer.Localize("Retrieve")); ImGui.NextColumn();
             if (Config.Teleport)
@@ -184,7 +185,9 @@ namespace MapLinker.Gui
             {
                 var maplinkMessage = listToDisplay[i];
                 ImGui.Text(maplinkMessage.Sender); ImGui.NextColumn();
+                ImGui.PushTextWrapPos();
                 ImGui.TextUnformatted(maplinkMessage.Text); ImGui.NextColumn();
+                ImGui.PopTextWrapPos();
                 ImGui.Text(maplinkMessage.RecordTime.ToString()); ImGui.NextColumn();
                 if(ImGui.Button(_localizer.Localize("View") + "##" + i.ToString() ))
                 {
@@ -206,10 +209,24 @@ namespace MapLinker.Gui
                 ImGui.NextColumn();
                 ImGui.Separator();
             }
+            ImGui.Columns(0, "Maplinks", false);
+
             if (null != toDelete)
             {
                 Config.MapLinkMessageList.Remove(toDelete);
                 Config.Save();
+            }
+
+            if (ImGui.Button(_localizer.Localize("Export")))
+            {
+                string text = "";
+                for (int i = 0; i < listToDisplay.Count(); i++)
+                {
+                    var maplinkMessage = listToDisplay[i];
+                    text += $"{maplinkMessage.Sender}|{maplinkMessage.Text}|{maplinkMessage.RecordTime}\n";
+                }
+                ImGui.SetClipboardText(text.Trim());
+                Plugin.ChatGui.Print($"{listToDisplay.Count()} maplinks were copied to clickboard.");
             }
 
         }

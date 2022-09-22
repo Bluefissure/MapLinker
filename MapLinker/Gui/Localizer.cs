@@ -77,6 +77,7 @@ namespace MapLinker.Gui
             zh.Add("Sender", "发送者");
             zh.Add("Timeout", "超时");
             zh.Add("Maplink within timeout will be filtered by it's maplink instead of full text.", "超时内的Maplink将由其Maplink而不是全文过滤。");
+            zh.Add("Bring the game to front with new maplink and flag it", "收到 maplink 时激活游戏并在地图显示");
             zh.Add("Message", "消息");
             zh.Add("Time", "时间");
             zh.Add("Retrieve", "检索");
@@ -85,6 +86,7 @@ namespace MapLinker.Gui
             zh.Add("View", "查看");
             zh.Add("Tele", "传送");
             zh.Add("Del", "删除");
+            zh.Add("Export", "导出");
             zh.Add("Clear", "清空");
             zh.Add("Max Records", "最多记录");
             zh.Add("Target", "目标");

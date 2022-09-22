@@ -27,6 +27,7 @@ namespace MapLinker
         public int MaxRecordings = 100;
         public bool PrintMessage = false;
         public bool PrintError = true;
+        public bool BringFront = false;
         public List<ushort> FilteredChannels = new List<ushort>();
         // public List<ushort> RecordingChannels = new List<ushort> { };
 
