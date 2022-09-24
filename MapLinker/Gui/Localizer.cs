@@ -30,7 +30,7 @@ namespace MapLinker.Gui
             zh.Add("General Settings", "通用设置");
             zh.Add("Recording", "记录中");
             zh.Add("Tooltips", "选项说明");
-            zh.Add("Reverse sorting of maplinks", "反向排序");
+            zh.Add("Reverse sorting", "反向排序");
             zh.Add("Call /tp to teleport to the nearest aetheryte", "使用 /tp 命令进行传送");
             zh.Add("Language:", "语言");
             zh.Add("Print Debug Message", "打印调试消息");
@@ -89,6 +89,8 @@ namespace MapLinker.Gui
             zh.Add("Export", "导出");
             zh.Add("Clear", "清空");
             zh.Add("Max Records", "最多记录");
+            zh.Add("Message Wrap", "消息换行");
+            zh.Add("Line Wrap for message column.", "消息列的换行。");
             zh.Add("Target", "目标");
         }
     }

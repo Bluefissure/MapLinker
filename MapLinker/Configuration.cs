@@ -25,9 +25,13 @@ namespace MapLinker
         public bool SortDesc = false;
         public int FilterDupTimeout = 5;
         public int MaxRecordings = 100;
+        public float CombatOpacity = 1;
+        public bool CombatHide = false;
+        public bool CombatClickthru = false;
         public bool PrintMessage = false;
         public bool PrintError = true;
         public bool BringFront = false;
+        public bool MessageWrap = false;
         public List<ushort> FilteredChannels = new List<ushort>();
         // public List<ushort> RecordingChannels = new List<ushort> { };
 

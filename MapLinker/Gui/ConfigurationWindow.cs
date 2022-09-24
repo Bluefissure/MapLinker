@@ -38,6 +38,18 @@ namespace MapLinker.Gui
 
         protected override void DrawUi()
         {
+            if (Plugin.ClientState.LocalPlayer.StatusFlags.HasFlag(Dalamud.Game.ClientState.Objects.Enums.StatusFlags.InCombat))
+            {
+                ImGui.SetNextWindowBgAlpha(Config.CombatOpacity);
+                if (Config.CombatHide)
+                {
+                    return;
+                }
+                if (Config.CombatClickthru)
+                {
+                    ImGui.SetNextFrameWantCaptureMouse(false);
+                }
+            }
             ImGui.SetNextWindowSize(new Vector2(530, 450), ImGuiCond.FirstUseEver);
             if (!ImGui.Begin($"{Plugin.Name} {_localizer.Localize("Panel")}", ref WindowVisible, ImGuiWindowFlags.NoScrollWithMouse))
             {
@@ -89,9 +101,23 @@ namespace MapLinker.Gui
             if (Config.ShowTooltips && ImGui.IsItemHovered())
                 ImGui.SetTooltip(_localizer.Localize("Add an option to call /tp to teleport to the nearest aetheryte.\n" +
                                  "Make sure you have downloaded Teleporter Plugin."));
-            if (ImGui.Checkbox(_localizer.Localize("Reverse sorting of maplinks"), ref Config.SortDesc)) Config.Save();
-            if (ImGui.Checkbox(_localizer.Localize("Bring the game to front with new maplink"), ref Config.BringFront)) Config.Save();
+            if (ImGui.Checkbox(_localizer.Localize("Reverse sorting"), ref Config.SortDesc)) Config.Save();
+            if (ImGui.Checkbox(_localizer.Localize("Bring front"), ref Config.BringFront)) Config.Save();
+            if (Plugin.Config.ShowTooltips && ImGui.IsItemHovered())
+                ImGui.SetTooltip(_localizer.Localize("Bring the game to front with new maplink"));
+            if (ImGui.Checkbox(_localizer.Localize("Message Wrap"), ref Config.MessageWrap)) Config.Save();
+            if (Plugin.Config.ShowTooltips && ImGui.IsItemHovered())
+                ImGui.SetTooltip(_localizer.Localize("Line Wrap for message column."));
+            if (ImGui.Checkbox(_localizer.Localize("Combat Hide"), ref Config.CombatHide)) Config.Save();
+            if (Plugin.Config.ShowTooltips && ImGui.IsItemHovered())
+                ImGui.SetTooltip(_localizer.Localize("Hide during combat."));
+            if (ImGui.Checkbox(_localizer.Localize("Combat Click Thru"), ref Config.CombatClickthru)) Config.Save();
+            if (Plugin.Config.ShowTooltips && ImGui.IsItemHovered())
+                ImGui.SetTooltip(_localizer.Localize("Click through during combat."));
             if (ImGui.DragInt(_localizer.Localize("Max Records"), ref Config.MaxRecordings, 1, 10, 100)) Config.Save();
+            if (ImGui.DragFloat(_localizer.Localize("Combat Opacity"), ref Config.CombatOpacity, 0.01f, 0, 1)) Config.Save();
+            if (Plugin.Config.ShowTooltips && ImGui.IsItemHovered())
+                ImGui.SetTooltip(_localizer.Localize("Opacity during combat."));
 
             ImGui.TextUnformatted(_localizer.Localize("Language:"));
             if (Plugin.Config.ShowTooltips && ImGui.IsItemHovered())
@@ -185,9 +211,16 @@ namespace MapLinker.Gui
             {
                 var maplinkMessage = listToDisplay[i];
                 ImGui.Text(maplinkMessage.Sender); ImGui.NextColumn();
-                ImGui.PushTextWrapPos();
-                ImGui.TextUnformatted(maplinkMessage.Text); ImGui.NextColumn();
-                ImGui.PopTextWrapPos();
+                if (Config.MessageWrap)
+                {
+                    ImGui.PushTextWrapPos();
+                    ImGui.TextUnformatted(maplinkMessage.Text); ImGui.NextColumn();
+                    ImGui.PopTextWrapPos();
+                }
+                else
+                {
+                    ImGui.TextUnformatted(maplinkMessage.Text); ImGui.NextColumn();
+                }
                 ImGui.Text(maplinkMessage.RecordTime.ToString()); ImGui.NextColumn();
                 if(ImGui.Button(_localizer.Localize("View") + "##" + i.ToString() ))
                 {
@@ -209,7 +242,7 @@ namespace MapLinker.Gui
                 ImGui.NextColumn();
                 ImGui.Separator();
             }
-            ImGui.Columns(0, "Maplinks", false);
+            ImGui.Columns(1);
 
             if (null != toDelete)
             {
