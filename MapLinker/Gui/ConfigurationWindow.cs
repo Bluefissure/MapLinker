@@ -38,7 +38,7 @@ namespace MapLinker.Gui
 
         protected override void DrawUi()
         {
-            if (Plugin.ClientState.LocalPlayer.StatusFlags.HasFlag(Dalamud.Game.ClientState.Objects.Enums.StatusFlags.InCombat))
+            if (Plugin.ClientState.LocalPlayer?.StatusFlags.HasFlag(Dalamud.Game.ClientState.Objects.Enums.StatusFlags.InCombat) == true)
             {
                 ImGui.SetNextWindowBgAlpha(Config.CombatOpacity);
                 if (Config.CombatHide)
