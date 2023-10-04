@@ -15,6 +15,7 @@ using Dalamud.Data;
 using Dalamud.Game.Gui;
 using Dalamud.Logging;
 using System.Collections.Generic;
+using Dalamud.Plugin.Services;
 
 namespace MapLinker
 {
@@ -23,13 +24,13 @@ namespace MapLinker
         public string Name => "MapLinker";
         public PluginUi Gui { get; private set; }
         public DalamudPluginInterface Interface { get; private set; }
-        public CommandManager CommandManager { get; private set; }
-        public DataManager DataManager { get; private set; }
-        public ClientState ClientState { get; private set; }
-        public TargetManager TargetManager { get; private set; }
-        public Framework Framework { get; private set; }
-        public ChatGui ChatGui { get; private set; }
-        public GameGui GameGui { get; private set; }
+        public ICommandManager CommandManager { get; private set; }
+        public IDataManager DataManager { get; private set; }
+        public IClientState ClientState { get; private set; }
+        public ITargetManager TargetManager { get; private set; }
+        public IFramework Framework { get; private set; }
+        public IChatGui ChatGui { get; private set; }
+        public IGameGui GameGui { get; private set; }
 
         public Configuration Config { get; private set; }
         public PlayerCharacter LocalPlayer => ClientState.LocalPlayer;
@@ -48,13 +49,13 @@ namespace MapLinker
 
         public MapLinker(
             DalamudPluginInterface pluginInterface,
-            ChatGui chat,
-            CommandManager commands,
-            DataManager data,
-            ClientState clientState,
-            Framework framework,
-            GameGui gameGui,
-            TargetManager targetManager)
+            IChatGui chat,
+            ICommandManager commands,
+            IDataManager data,
+            IClientState clientState,
+            IFramework framework,
+            IGameGui gameGui,
+            ITargetManager targetManager)
         {
             Interface = pluginInterface;
             ClientState = clientState;
