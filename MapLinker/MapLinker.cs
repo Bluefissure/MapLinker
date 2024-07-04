@@ -7,15 +7,12 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Lumina.Excel.GeneratedSheets;
 using MapLinker.Objects;
-using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState.Objects.SubKinds;
-using Dalamud.Game;
-using Dalamud.Data;
-using Dalamud.Game.Gui;
 using Dalamud.Logging;
 using System.Collections.Generic;
 using Dalamud.Plugin.Services;
+using Dalamud.IoC;
 
 namespace MapLinker
 {
@@ -23,7 +20,7 @@ namespace MapLinker
     {
         public string Name => "MapLinker";
         public PluginUi Gui { get; private set; }
-        public DalamudPluginInterface Interface { get; private set; }
+        public static IDalamudPluginInterface Interface { get; private set; }
         public ICommandManager CommandManager { get; private set; }
         public IDataManager DataManager { get; private set; }
         public IClientState ClientState { get; private set; }
@@ -32,10 +29,14 @@ namespace MapLinker
         public IChatGui ChatGui { get; private set; }
         public IGameGui GameGui { get; private set; }
 
+        public static IPluginLog PluginLog { get; private set; }
+
         public Configuration Config { get; private set; }
-        public PlayerCharacter LocalPlayer => ClientState.LocalPlayer;
+        public IPlayerCharacter LocalPlayer => ClientState.LocalPlayer;
         public bool IsLoggedIn => LocalPlayer != null;
         public bool IsInHomeWorld => LocalPlayer?.CurrentWorld == LocalPlayer?.HomeWorld;
+
+        public static object PluginInterface { get; internal set; }
 
         public Lumina.Excel.ExcelSheet<Aetheryte> Aetherytes = null;
         public Lumina.Excel.ExcelSheet<MapMarker> AetherytesMap = null;
@@ -48,14 +49,15 @@ namespace MapLinker
         }
 
         public MapLinker(
-            DalamudPluginInterface pluginInterface,
+            IDalamudPluginInterface pluginInterface,
             IChatGui chat,
             ICommandManager commands,
             IDataManager data,
             IClientState clientState,
             IFramework framework,
             IGameGui gameGui,
-            ITargetManager targetManager)
+            ITargetManager targetManager,
+            IPluginLog pluginLog)
         {
             Interface = pluginInterface;
             ClientState = clientState;
@@ -68,12 +70,12 @@ namespace MapLinker
             Aetherytes = DataManager.GetExcelSheet<Aetheryte>(ClientState.ClientLanguage);
             AetherytesMap = DataManager.GetExcelSheet<MapMarker>(ClientState.ClientLanguage);
             Config = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            Config.Initialize(pluginInterface);
             CommandManager.AddHandler("/maplink", new CommandInfo(CommandHandler)
             {
                 HelpMessage = "/maplink - open the maplink panel."
             });
             Gui = new PluginUi(this);
+            PluginLog = pluginLog;
             ChatGui.ChatMessage += Chat_OnChatMessage;
         }
         public void CommandHandler(string command, string arguments)
@@ -149,14 +151,14 @@ namespace MapLinker
         {
             if (!Config.PrintMessage) return;
             var msg = $"[{Name}] {message}";
-            PluginLog.Log(msg);
+            PluginLog.Info(msg);
             ChatGui.Print(msg);
         }
         public void LogError(string message)
         {
             if (!Config.PrintError) return;
             var msg = $"[{Name}] {message}";
-            PluginLog.LogError(msg);
+            PluginLog.Error(msg);
             ChatGui.PrintError(msg);
         }
         private int ConvertMapCoordinateToRawPosition(float pos, float scale)
@@ -262,7 +264,7 @@ namespace MapLinker
 
         }
 
-        private void Chat_OnChatMessage(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
+        private void Chat_OnChatMessage(XivChatType type, int timestamp, ref SeString sender, ref SeString message, ref bool isHandled)
         {
             if (!Config.Recording) return;
             bool hasMapLink = false;

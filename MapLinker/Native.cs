@@ -124,7 +124,7 @@ namespace MapLinker
             {
                 if (TryFindGameWindow(out var hwnd))
                 {
-                    PluginLog.Debug($"FlashWindow begins with hwid={hwnd:X16}");
+                    MapLinker.PluginLog.Debug($"FlashWindow begins with hwid={hwnd:X16}");
                     var flashInfo = new Native.FLASHWINFO
                     {
                         cbSize = (uint)Marshal.SizeOf<Native.FLASHWINFO>(),
@@ -138,51 +138,51 @@ namespace MapLinker
                 }
                 else
                 {
-                    PluginLog.Error("Failed to find FFXIV window, somehow.");
+                    MapLinker.PluginLog.Error("Failed to find FFXIV window, somehow.");
                 }
             }
 
 
             public static void Activate()
             {
-                PluginLog.Information("Bringing FFXIV foreground.");
+                MapLinker.PluginLog.Information("Bringing FFXIV foreground.");
                 if (TryFindGameWindow(out var focusOnWindowHandle))
                 {
                     if (IsIconic(focusOnWindowHandle))
                     {
-                        PluginLog.Information("Window is minimized.");
+                        MapLinker.PluginLog.Information("Window is minimized.");
                         ShowWindow(focusOnWindowHandle, SW_RESTORE);
                         if (ApplicationIsActivated())
                         {
-                            PluginLog.Information("Success: FFXIV brought to front.");
+                            MapLinker.PluginLog.Information("Success: FFXIV brought to front.");
                             return;
                         }
                     }
-                    PluginLog.Information($"SetForegroundWindow: {SetForegroundWindow(focusOnWindowHandle)}");
+                    MapLinker.PluginLog.Information($"SetForegroundWindow: {SetForegroundWindow(focusOnWindowHandle)}");
                     if (ApplicationIsActivated())
                     {
-                        PluginLog.Information("Success: FFXIV brought to front.");
+                        MapLinker.PluginLog.Information("Success: FFXIV brought to front.");
                         return;
                     }
                     else
                     {
-                        PluginLog.Information("Failed to bring FFXIV to front. Trying minimize + restore...");
+                        MapLinker.PluginLog.Information("Failed to bring FFXIV to front. Trying minimize + restore...");
                         ShowWindow(focusOnWindowHandle, SW_MINIMIZE);
                         ShowWindow(focusOnWindowHandle, SW_RESTORE);
                         if (ApplicationIsActivated())
                         {
-                            PluginLog.Information("Success: FFXIV brought to front.");
+                            MapLinker.PluginLog.Information("Success: FFXIV brought to front.");
                             return;
                         }
                         else
                         {
-                            PluginLog.Information("Failed to bring FFXIV to front.");
+                            MapLinker.PluginLog.Information("Failed to bring FFXIV to front.");
                         }
                     }
                 }
                 else
                 {
-                    PluginLog.Information("Failed to find FFXIV, as funny as it may sound.");
+                    MapLinker.PluginLog.Information("Failed to find FFXIV, as funny as it may sound.");
                 }
             }
 

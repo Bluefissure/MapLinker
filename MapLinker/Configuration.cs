@@ -13,7 +13,6 @@ namespace MapLinker
     {
         public int Version { get; set; } = 0;
 
-        public MapLinkerLanguage MapLinkerLanguage = MapLinkerLanguage.Client;
         public bool ShowTooltips = true;
         public bool FilterDuplicates = false;
         public bool UseFloatingWindow;
@@ -38,19 +37,17 @@ namespace MapLinker
 
         #region Init and Save
 
-        [NonSerialized] private DalamudPluginInterface _pluginInterface;
 
-        public void Initialize(DalamudPluginInterface pluginInterface)
+        public void Initialize()
         {
 #if DEBUG
             PrintMessage = true;
 #endif
-            _pluginInterface = pluginInterface;
         }
 
         public void Save()
         {
-            _pluginInterface.SavePluginConfig(this);
+            MapLinker.Interface.SavePluginConfig(this);
         }
 
         #endregion

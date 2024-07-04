@@ -13,8 +13,9 @@ namespace MapLinker
             ConfigWindow = new ConfigurationWindow(plugin);
 
             _plugin = plugin;
-            _plugin.Interface.UiBuilder.Draw += Draw;
-            _plugin.Interface.UiBuilder.OpenConfigUi += OnOpenConfigUi;
+            MapLinker.Interface.UiBuilder.Draw += Draw;
+            MapLinker.Interface.UiBuilder.OpenConfigUi += OnOpenConfigUi;
+            MapLinker.Interface.UiBuilder.OpenMainUi += OnOpenConfigUi;
         }
 
         private void Draw()
@@ -28,8 +29,9 @@ namespace MapLinker
 
         public void Dispose()
         {
-            _plugin.Interface.UiBuilder.Draw -= Draw;
-            _plugin.Interface.UiBuilder.OpenConfigUi -= OnOpenConfigUi;
+            MapLinker.Interface.UiBuilder.Draw -= Draw;
+            MapLinker.Interface.UiBuilder.OpenConfigUi -= OnOpenConfigUi;
+            MapLinker.Interface.UiBuilder.OpenMainUi -= OnOpenConfigUi;
         }
     }
 }
