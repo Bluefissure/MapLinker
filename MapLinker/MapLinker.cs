@@ -5,7 +5,6 @@ using Dalamud.Game.Command;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Lumina.Excel.GeneratedSheets;
 using MapLinker.Objects;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState.Objects.SubKinds;
@@ -13,6 +12,7 @@ using Dalamud.Logging;
 using System.Collections.Generic;
 using Dalamud.Plugin.Services;
 using Dalamud.IoC;
+using Lumina.Excel.Sheets;
 
 namespace MapLinker
 {
@@ -34,12 +34,12 @@ namespace MapLinker
         public Configuration Config { get; private set; }
         public IPlayerCharacter LocalPlayer => ClientState.LocalPlayer;
         public bool IsLoggedIn => LocalPlayer != null;
-        public bool IsInHomeWorld => LocalPlayer?.CurrentWorld == LocalPlayer?.HomeWorld;
+        //public bool IsInHomeWorld => LocalPlayer?.CurrentWorld == LocalPlayer?.HomeWorld;
 
         public static object PluginInterface { get; internal set; }
 
         public Lumina.Excel.ExcelSheet<Aetheryte> Aetherytes = null;
-        public Lumina.Excel.ExcelSheet<MapMarker> AetherytesMap = null;
+        public Lumina.Excel.SubrowExcelSheet<MapMarker> AetherytesMap = null;
 
         public void Dispose()
         {
@@ -68,7 +68,7 @@ namespace MapLinker
             ChatGui = chat;
             GameGui = gameGui;
             Aetherytes = DataManager.GetExcelSheet<Aetheryte>(ClientState.ClientLanguage);
-            AetherytesMap = DataManager.GetExcelSheet<MapMarker>(ClientState.ClientLanguage);
+            AetherytesMap = DataManager.GetSubrowExcelSheet<MapMarker>(ClientState.ClientLanguage);
             Config = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             CommandManager.AddHandler("/maplink", new CommandInfo(CommandHandler)
             {
@@ -195,25 +195,25 @@ namespace MapLinker
             foreach (var data in Aetherytes)
             {
                 if (!data.IsAetheryte) continue;
-                if (data.Territory.Value == null) continue;
-                if (data.PlaceName.Value == null) continue;
+                //if (data.Territory.Value == null) continue;
+                //if (data.PlaceName.Value == null) continue;
                 var scale = maplinkMessage.Scale;
                 if (data.Territory.Value.RowId == maplinkMessage.TerritoryId)
                 {
-                    var mapMarker = AetherytesMap.FirstOrDefault(m => (m.DataType == 3 && m.DataKey == data.RowId));
+                    Nullable<MapMarker> mapMarker = AetherytesMap.Flatten().FirstOrDefault(m => m.DataType == 3 && m.DataKey.RowId == data.RowId);
                     if (mapMarker == null)
                     {
                         LogError($"Cannot find aetherytes position for {maplinkMessage.PlaceName}#{data.PlaceName.Value.Name}");
                         continue;
                     }
-                    var AethersX = ConvertMapMarkerToMapCoordinate(mapMarker.X, scale);
-                    var AethersY = ConvertMapMarkerToMapCoordinate(mapMarker.Y, scale);
+                    var AethersX = ConvertMapMarkerToMapCoordinate(mapMarker.Value.X, scale);
+                    var AethersY = ConvertMapMarkerToMapCoordinate(mapMarker.Value.Y, scale);
                     Log($"Aetheryte: {data.PlaceName.Value.Name} ({AethersX} ,{AethersY})");
                     double temp_distance = Math.Pow(AethersX - maplinkMessage.X, 2) + Math.Pow(AethersY - maplinkMessage.Y, 2);
                     if (aetheryteName == "" || temp_distance < distance)
                     {
                         distance = temp_distance;
-                        aetheryteName = data.PlaceName.Value.Name;
+                        aetheryteName = data.PlaceName.Value.Name.ToString();
                     }
                 }
             }
@@ -229,15 +229,15 @@ namespace MapLinker
 
             var target = TargetManager.Target;
             var territoryType = ClientState.TerritoryType;
-            var place = DataManager.GetExcelSheet<Map>(ClientState.ClientLanguage).FirstOrDefault(m => m.TerritoryType.Row == territoryType);
-            var placeName = place.PlaceName.Row;
+            var place = DataManager.GetExcelSheet<Map>(ClientState.ClientLanguage).FirstOrDefault(m => m.TerritoryType.RowId == territoryType);
+            var placeName = place.PlaceName.RowId;
             scale = place.SizeFactor;
             var placeNameRow = DataManager.GetExcelSheet<PlaceName>(ClientState.ClientLanguage).GetRow(placeName).Name;
             if (target != null)
             {
                 coordX = (float)ToMapCoordinate(target.Position.X, scale);
                 coordY = (float)ToMapCoordinate(target.Position.Z, scale);
-                messageText += placeNameRow;
+                messageText += placeNameRow.ToString();
                 messageText += " X:" + coordX.ToString("#0.0");
                 messageText += " Y:" + coordY.ToString("#0.0");
                 var newMapLinkMessage = new MapLinkMessage(
@@ -248,7 +248,7 @@ namespace MapLinker
                         coordY,
                         scale,
                         territoryType,
-                        placeNameRow,
+                        placeNameRow.ToString(),
                         DateTime.Now
                     );
                 Config.MapLinkMessageList.Add(newMapLinkMessage);
@@ -279,7 +279,7 @@ namespace MapLinker
                     maplinkPayload = mapLinkload;
                     hasMapLink = true;
                     // float fudge = 0.05f;
-                    scale = mapLinkload.TerritoryType.Map.Value.SizeFactor;
+                    scale = mapLinkload.TerritoryType.Value.Map.Value.SizeFactor;
                     // coordX = ConvertRawPositionToMapCoordinate(mapLinkload.RawX, scale) - fudge;
                     // coordY = ConvertRawPositionToMapCoordinate(mapLinkload.RawY, scale) - fudge;
                     coordX = mapLinkload.XCoord;
@@ -356,7 +356,7 @@ namespace MapLinker
         {
             Log($"Viewing {maplinkMessage.Text}");
             var map = DataManager.GetExcelSheet<TerritoryType>().GetRow(maplinkMessage.TerritoryId).Map;
-            var maplink = new MapLinkPayload(maplinkMessage.TerritoryId, map.Row, maplinkMessage.X, maplinkMessage.Y);
+            var maplink = new MapLinkPayload(maplinkMessage.TerritoryId, map.RowId, maplinkMessage.X, maplinkMessage.Y);
             GameGui.OpenMapWithMapLink(maplink);
         }
     }

@@ -1,7 +1,4 @@
 ﻿using System;
-using Dalamud;
-using System.Collections.Generic;
-using Lumina.Excel.GeneratedSheets;
 
 namespace MapLinker.Objects
 {

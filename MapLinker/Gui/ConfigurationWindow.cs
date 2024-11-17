@@ -6,7 +6,6 @@ using Dalamud.Game.Text;
 using ImGuiNET;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Data;
-using Lumina.Excel.GeneratedSheets;
 using MapLinker.Objects;
 
 namespace MapLinker.Gui
